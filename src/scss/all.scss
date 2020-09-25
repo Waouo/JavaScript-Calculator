@@ -20,15 +20,25 @@ body {
 main {
     background-color: black;
     width: 340px;
-    height: 385px;
+    height: 400px;
     padding: 10px;
 }
 
 #display {
-    background-color: white;
+    background-color: black;
     width: 320px;
-    height: 40px;
+    height: 65px;
     font-family: digital;
+
+    h1{ 
+        width: 320px;
+        height: 28.8px;
+        font-size: 1.5rem;
+        color: orange;
+    }
+    h2{
+        color: white;
+    }
 }
 
 button {
@@ -41,12 +51,12 @@ button {
     outline: 1px solid black;
     border: none;
 
-    :focus {
-        outline: 0;
+    &:focus {
+        outline: 1px solid black;
     }
 
     &:hover {
-        outline: 1px solid white;
+        outline: 1px solid gray;
         color: black;
         z-index: 2;
     }
