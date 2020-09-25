@@ -42,8 +42,11 @@ class App extends React.Component {
             case '0':
                 if (/^0$/.test(preVal)) {
                     preValResult = '0'
-                    formulaResult = formula === ('0' || '') ? btnValue : formula + '0'
-                } else {
+                    formulaResult = formula === ('0' || '') ? btnValue
+                        : /[\+\-\/\*]0$/.test(formula) ? formula
+                            : formula + '0'
+                }
+                else {
                     preValResult = preVal + '0'
                     formulaResult = formula + '0'
                 }
@@ -55,7 +58,7 @@ class App extends React.Component {
                     formulaResult = formula === ('') ? '0.'
                         : /[\+\-\/\*]$/.test(formula) === true ? formula + '0.'
                             : formula + '.'
-                            
+
                 } else if (/\./.test(preVal)) { //preValResult has '.'
                     preValResult = preVal
                     formulaResult = formula
@@ -68,7 +71,7 @@ class App extends React.Component {
             default:
                 if (/^0$/.test(preVal)) {
                     preValResult = btnValue
-                    formulaResult = formula + btnValue
+                    formulaResult = formula === '0' ? btnValue : formula + btnValue
                 } else {
                     preValResult = preVal + btnValue
                     formulaResult = formula + btnValue
@@ -87,21 +90,21 @@ class App extends React.Component {
 
     handleOperator(e) {
         const operator = e.target.value
-        let preVal, formula
+        let preValResult, formulaResult
 
         if (/[\+\-\/\*]/.test(this.state.preVal)) {
-            preVal = operator
-            formula = this.state.formula.slice(0, -1) + operator
+            preValResult = operator
+            formulaResult = this.state.formula.slice(0, -1) + operator
         }
         else {
-            preVal = operator
-            formula = this.state.formula + operator
+            preValResult = operator
+            formulaResult = this.state.formula + operator
         }
 
 
         this.setState({
-            preVal: preVal,
-            formula: formula,
+            preVal: preValResult,
+            formula: formulaResult,
 
         })
     }
