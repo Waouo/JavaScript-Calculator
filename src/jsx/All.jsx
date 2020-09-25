@@ -30,63 +30,84 @@ class App extends React.Component {
 
     handleNumberAndDot(e) {
         const btnValue = e.target.value
-        let preVal, formula //Value to setState
+        let { preVal, formula } = this.state
+        let preValResult, formulaResult //Value to setState
+
+        // If the last clicked key is operator
+        if (/[\+\-\/\*]/.test(preVal)) {
+            preVal = '0'
+        }
 
         switch (e.target.value) {
             case '0':
-                if (/^0$/.test(this.state.preVal)) {
-                    preVal = btnValue
-                    formula = btnValue
+                if (/^0$/.test(preVal)) {
+                    preValResult = '0'
+                    formulaResult = formula === ('0' || '') ? btnValue : formula + '0'
                 } else {
-                    preVal = this.state.preVal + btnValue
-                    formula = this.state.formula + btnValue
+                    preValResult = preVal + '0'
+                    formulaResult = formula + '0'
                 }
                 break;
 
             case '.':
-                if (/^0$/.test(this.state.preVal)) { //preval === 0
-                    preVal = '0.'
-                    formula = '0.'
-                } else if (/\./.test(this.state.preVal)){ //preval has '.'
-                    preVal = this.state.preVal 
-                    formula = this.state.formula
+                if (/^0$/.test(preVal)) { //preValResult === 0
+                    preValResult = '0.'
+                    formulaResult = formula === ('') ? '0.'
+                        : /[\+\-\/\*]$/.test(formula) === true ? formula + '0.'
+                            : formula + '.'
+                            
+                } else if (/\./.test(preVal)) { //preValResult has '.'
+                    preValResult = preVal
+                    formulaResult = formula
                 } else {
-                    preVal = this.state.preVal + btnValue
-                    formula = this.state.formula + btnValue
+                    preValResult = preVal + '.'
+                    formulaResult = formula + '.'
                 }
                 break;
 
-
             default:
-                if (/^0$/.test(this.state.preVal)) {
-                    preVal = btnValue
-                    formula = btnValue
+                if (/^0$/.test(preVal)) {
+                    preValResult = btnValue
+                    formulaResult = formula + btnValue
                 } else {
-                    preVal = this.state.preVal + btnValue
-                    formula = this.state.formula + btnValue
+                    preValResult = preVal + btnValue
+                    formulaResult = formula + btnValue
                 }
                 break;
         }
 
+
+
         this.setState({
-            preVal: preVal,
-            formula: formula,
+            preVal: preValResult,
+            formula: formulaResult,
         })
 
     }
 
     handleOperator(e) {
         const operator = e.target.value
-        
-        switch (operator) {
-            
-        }
-        
+        let preVal, formula
 
+        if (/[\+\-\/\*]/.test(this.state.preVal)) {
+            preVal = operator
+            formula = this.state.formula.slice(0, -1) + operator
+        }
+        else {
+            preVal = operator
+            formula = this.state.formula + operator
+        }
+
+
+        this.setState({
+            preVal: preVal,
+            formula: formula,
+
+        })
     }
 
     handleAnswer() {
-        
+
     }
 
     onGetState() {
