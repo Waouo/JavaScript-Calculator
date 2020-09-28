@@ -13,8 +13,6 @@ class App extends React.Component {
         this.handleNumberAndDot = this.handleNumberAndDot.bind(this)
         this.handleOperator = this.handleOperator.bind(this)
         this.handleAnswer = this.handleAnswer.bind(this)
-        this.onGetState = this.onGetState.bind(this)     /** TEST */
-
     }
     onClear() {
         this.setState({
@@ -158,11 +156,6 @@ class App extends React.Component {
         })
     }
 
-    onGetState() {
-        console.log(this.state);
-    }
-
-
     render() {
 
         return (
@@ -170,7 +163,6 @@ class App extends React.Component {
                 <main id='calculator' className="d-flex flex-wrap justify-content-center pt-0">
                     <h1 id='answer' className='text-right m-0'>{this.state.formula}</h1>
                     <h2 id='input' className='text-right m'>{this.state.preVal}</h2>
-
                     <button id='clear' className='jumbo' onClick={this.onClear} style={{ backgroundColor: 'rgb(172,57,57)' }}>AC</button>
                     <button id='divide' value='/' onClick={this.handleOperator}>/</button>
                     <button id='multiply' value='*' onClick={this.handleOperator}>x</button>
@@ -189,7 +181,6 @@ class App extends React.Component {
                         <button id='zero' value='0' onClick={this.handleNumberAndDot} style={{ width: '160px' }}> 0</button>
                         <button id='decimal' value='.' onClick={this.handleNumberAndDot}>.</button>
                     </div>
-
                     <button id='equal' onClick={this.handleAnswer} style={{ backgroundColor: "rgb(0,68,102)", height: '130px' }}>=</button>
                 </main>
                 <button onClick={this.onGetState}>GetState</button>
