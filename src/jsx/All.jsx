@@ -8,8 +8,6 @@ class App extends React.Component {
             formula: '',
             preVal: '0',
             answer: '',
-            currentSign: 'pos',
-            lastClicked: '',
         }
         this.onClear = this.onClear.bind(this)
         this.handleNumberAndDot = this.handleNumberAndDot.bind(this)
@@ -23,19 +21,41 @@ class App extends React.Component {
             formula: '',
             preVal: '0',
             answer: '',
-            currentSign: 'pos',
-            lastClicked: '',
         })
     }
 
     handleNumberAndDot(e) {
+        let { preVal, formula, answer } = this.state
+
+        if (preVal.length >= 21) {
+            const preFormula = preVal.slice()
+
+            this.setState({
+                preVal: 'DIGIT LIMIT MET'
+            })
+
+            setTimeout(() => {
+                this.setState({
+                    preVal: preFormula
+                })
+            }, 1000)
+            clearTimeout()
+
+            return;
+        }
+        else if (preVal === 'DIGIT LIMIT MET') return; // Prevent function excutes a lot of times
+
         const btnValue = e.target.value
-        let { preVal, formula } = this.state
         let preValResult, formulaResult //Value to setState
 
-        // If the last clicked key is operator
-        if (/[\+\-\/\*]/.test(preVal)) {
+        // The last clicked key is a operator
+        if (/[\+\-\/\*]$/.test(preVal)) {
             preVal = '0'
+        }
+        // The last clicked key is equal
+        else if (answer !== '') {
+            preVal = ''
+            formula = ''
         }
 
         switch (e.target.value) {
@@ -67,7 +87,8 @@ class App extends React.Component {
                     formulaResult = formula + '.'
                 }
                 break;
-
+            
+            // Define the action of key 1~9
             default:
                 if (/^0$/.test(preVal)) {
                     preValResult = btnValue
@@ -79,28 +100,36 @@ class App extends React.Component {
                 break;
         }
 
-
-
         this.setState({
             preVal: preValResult,
             formula: formulaResult,
+            answer: ''
         })
 
     }
 
     handleOperator(e) {
+        if (this.state.preVal === 'DIGIT LIMIT MET') return;
+
         const operator = e.target.value
+        const { preVal, formula, answer } = this.state
         let preValResult, formulaResult
 
-        if (/[\+\-\/\*]/.test(this.state.preVal)) {
+        // Last clicked key is a equal
+        if (answer !== '') {
             preValResult = operator
-            formulaResult = this.state.formula.slice(0, -1) + operator
+            formulaResult = answer + operator
         }
+        // Last clicked key is a operatorL
+        else if (/[\+\-\/\*]/.test(preVal)) { 
+            preValResult = operator
+            formulaResult = formula.slice(0, -1) + operator
+        }
+        // Last clicked key isn't a operator
         else {
             preValResult = operator
-            formulaResult = this.state.formula + operator
+            formulaResult = formula + operator
         }
-
 
         this.setState({
             preVal: preValResult,
@@ -110,7 +139,23 @@ class App extends React.Component {
     }
 
     handleAnswer() {
+        if (preVal === 'DIGIT LIMIT MET') return;
 
+        const { formula, preVal } = this.state
+        let answer
+
+        try {
+            answer = eval(formula)
+        } catch (err) {
+            console.log('Formula is not allowed');
+            return;
+        }
+
+        this.setState({
+            preVal: answer,
+            formula: formula + ' = ' + answer,
+            answer: answer
+        })
     }
 
     onGetState() {
@@ -120,15 +165,12 @@ class App extends React.Component {
 
     render() {
 
-
-
         return (
             <div id='app'>
                 <main id='calculator' className="d-flex flex-wrap justify-content-center pt-0">
-                    <div id="display">
-                        <h1 id='ansert' className='text-right m-0'>{this.state.formula}</h1>
-                        <h2 id='input' className='text-right m-0'>{this.state.preVal}</h2>
-                    </div>
+                    <h1 id='answer' className='text-right m-0'>{this.state.formula}</h1>
+                    <h2 id='input' className='text-right m'>{this.state.preVal}</h2>
+
                     <button id='clear' className='jumbo' onClick={this.onClear} style={{ backgroundColor: 'rgb(172,57,57)' }}>AC</button>
                     <button id='divide' value='/' onClick={this.handleOperator}>/</button>
                     <button id='multiply' value='*' onClick={this.handleOperator}>x</button>
@@ -147,6 +189,7 @@ class App extends React.Component {
                         <button id='zero' value='0' onClick={this.handleNumberAndDot} style={{ width: '160px' }}> 0</button>
                         <button id='decimal' value='.' onClick={this.handleNumberAndDot}>.</button>
                     </div>
+
                     <button id='equal' onClick={this.handleAnswer} style={{ backgroundColor: "rgb(0,68,102)", height: '130px' }}>=</button>
                 </main>
                 <button onClick={this.onGetState}>GetState</button>

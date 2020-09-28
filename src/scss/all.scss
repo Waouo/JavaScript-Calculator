@@ -1,7 +1,7 @@
 @font-face {
-        font-family: 'digital';
-        src: url('../digital-7.ttf');
-    }
+    font-family: "digital";
+    src: url("../digital-7.ttf");
+}
 
 html,
 body {
@@ -20,27 +20,24 @@ body {
 main {
     background-color: black;
     width: 340px;
-    height: 400px;
     padding: 10px;
 }
 
-#display {
-    background-color: black;
+h1 {
     width: 320px;
-    height: 65px;
+    min-height: 28px;
+    font-size: 1.5rem;
+    color: orange;
+    word-break: break-all;
     font-family: digital;
-
-    h1{ 
-        width: 320px;
-        height: 28.8px;
-        font-size: 1.5rem;
-        color: orange;
-    }
-    h2{
-        color: white;
-    }
 }
 
+h2 {
+    width: 320px;
+    height: 28.8px;
+    color: white;
+    font-family: digital;
+}
 button {
     background-color: #4d4d4d;
     color: white;
